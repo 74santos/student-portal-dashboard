@@ -1,0 +1,15 @@
+export const FOCUS_SCORES = {
+
+  URGENT_ASSIGNMENT: 100,
+
+  WEAKEST_COURSE: 95,
+
+  LOW_HEALTH: 90,
+
+  DECLINING_MOMENTUM: 85,
+
+  HEAVY_WORKLOAD: 80,
+
+  GOAL_STATUS: 75,
+
+} as const;

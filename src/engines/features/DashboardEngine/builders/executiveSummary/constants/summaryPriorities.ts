@@ -1,0 +1,15 @@
+export const SUMMARY_PRIORITIES = {
+
+  RECOMMENDATION: 100,
+
+  WEAKNESS: 90,
+
+  ACHIEVEMENT: 80,
+
+  STRENGTH: 70,
+
+  DECISION: 60,
+
+  DEFAULT: 0,
+
+} as const;
