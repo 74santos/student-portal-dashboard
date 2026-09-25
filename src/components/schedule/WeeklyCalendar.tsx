@@ -242,7 +242,7 @@ export default function WeeklyCalendar({
                           (event.totalLanes || 1)
                         }% - 2px)`,
                       
-                        height: `${event.height}px`,
+                        // height: `${event.height}px`,
                       }}
                       onClick={() =>
                         onSelectEvent?.(

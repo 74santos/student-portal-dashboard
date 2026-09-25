@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../context/AppContext";
-import { MockAcademicAIService } from "../MockAcademicAIService";
+import { HttpAcademicAIService } from "../HttpAcademicAIService";
 import type { StudyPlan } from "../AcademicAIService";
 
 export function useAcademicCoach() {
@@ -20,12 +20,22 @@ export function useAcademicCoach() {
       setError("");
 
       try {
-        const aiService = new MockAcademicAIService();
+        const aiService = new HttpAcademicAIService();
 
         const plan = await aiService.generateStudyPlan({
           courses: ctx.courses,
           assignments: ctx.assignments,
-          snapshot: ctx.snapshot,
+          student: {
+            name: ctx.snapshot.student.name,
+            targetGPA: ctx.snapshot.student.targetGPA,
+            studyGoalHours: ctx.snapshot.student.studyGoalHours,
+          },
+        
+          academic: {
+            workload: ctx.snapshot.analysis.workload,
+            goalStatus: ctx.snapshot.analysis.goalStatus,
+            momentum: ctx.snapshot.analysis.momentum,
+          },
         });
 
         setStudyPlan(plan);

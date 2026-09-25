@@ -13,7 +13,7 @@ export default function ProtectedLayout() {
 
   return (
     <div className="dashboard-layout">
-
+      
       {
         sidebarOpen && (
           <div
@@ -41,7 +41,7 @@ export default function ProtectedLayout() {
         <Outlet />
       </div>
 
-      <Footer />
+       <Footer /> 
 
     </div>
   

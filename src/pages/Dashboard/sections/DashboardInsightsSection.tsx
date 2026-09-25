@@ -2,7 +2,7 @@ import  AcademicHealth  from "../../../components/dashboard/AcademicHealth";
 import  AcademicGoalsEngine  from "../../../components/dashboard/AcademicGoals";
 import  Achievements  from "../../../components/dashboard/Achievements";
 import  RiskEngine  from "../../../components/dashboard/RiskEngine";
-import  SmartInsights  from "../../../components/dashboard/SmartInsights";
+// import  SmartInsights  from "../../../components/dashboard/SmartInsights";
 import  StreakCard  from "../../../components/dashboard/StreakCard";
 
 
@@ -24,15 +24,15 @@ export function DashboardInsightsSection() {
 
                 <AcademicGoalsEngine />
 
-                <SmartInsights />
+                {/* <SmartInsights /> */}
+                <Achievements />
 
+                <StreakCard />
              
 
             </div>
 
-            <Achievements />
-
-            <StreakCard />
+          
 
         </div>
 

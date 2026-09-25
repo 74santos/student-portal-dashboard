@@ -5,7 +5,17 @@ import type { AcademicSnapshot } from "../../engines/features/AcademicEngine/typ
 export type AcademicAIContext = {
   courses: Course[];
   assignments: Assignment[];
-  snapshot: AcademicSnapshot;
+  student: {
+    name: string;
+    targetGPA: number;
+    studyGoalHours: number;
+  };
+
+  academic: {
+    workload: "Light" | "Moderate" | "Heavy";
+    goalStatus: "Ahead" | "On Track" | "Behind";
+    momentum: "Improving" | "Stable" | "Declining";
+  };
 };
 
 export type StudyRecommendation = {
