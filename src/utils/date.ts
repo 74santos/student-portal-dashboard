@@ -14,7 +14,29 @@ export function parseLocalDate(
   );
 }
 
+export function formatCoachDueDate(
+  dueDate: string,
+  dueTime?: string
+): string {
+  const [year, month, day] = dueDate
+    .split("-")
+    .map(Number);
 
+  const date = new Date(year, month - 1, day);
+
+  if (Number.isNaN(date.getTime())) {
+    return dueDate;
+  }
+
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+  }).format(date);
+
+  return dueTime
+    ? `${formattedDate} · ${dueTime}`
+    : formattedDate;
+}
 
 export function formatDate(
   dateString?: string

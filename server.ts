@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import OpenAI from "openai";
-
+import { formatCoachDueDate } from "./src/utils/date";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -129,9 +129,31 @@ app.post("/api/ai/study-plan", async (req, res) => {
         },
       });
   
-    const studyPlan = JSON.parse(response.output_text);
+      const studyPlan = JSON.parse(response.output_text);
 
-    return res.json(studyPlan);
+      const formattedStudyPlan = {
+        ...studyPlan,
+        recommendations: studyPlan.recommendations.map((recommendation: any) => {
+          const assignment = context.assignments.find(
+            (assignment: any) =>
+              assignment.id === recommendation.assignmentId
+          );
+      
+          if (!assignment) {
+            return recommendation;
+          }
+      
+          return {
+            ...recommendation,
+            dueDate: formatCoachDueDate(
+              assignment.dueDate,
+              assignment.dueTime
+            ),
+          };
+        }),
+      };
+      
+      return res.json(formattedStudyPlan);
     } catch (error) {
       console.error("AI study plan error:", error);
   

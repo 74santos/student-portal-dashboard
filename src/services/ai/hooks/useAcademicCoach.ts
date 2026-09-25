@@ -47,7 +47,11 @@ export function useAcademicCoach() {
     };
 
     generatePlan();
-  }, [ctx]);
+  }, [
+    ctx?.courses,
+    ctx?.assignments,
+    ctx?.snapshot,
+  ]);
 
   return {
     studyPlan,
