@@ -1,9 +1,11 @@
 # 🎓 Student Portal SaaS
 
-A modern academic productivity platform built with React, TypeScript, and an engine-driven architecture.
+A portfolio-grade academic productivity SaaS built with React and TypeScript, combining course and assignment management, academic analytics, personalized insights, and an AI Academic Coach.
 
 The Student Portal helps students manage coursework, assignments, academic performance, study habits, and long-term goals through intelligent analytics and a clean, responsive user experience.
 
+
+[GitHub Repository](https://github.com/74santos/student-portal-dashboard) · [Live Demo](#)
 ---
 
 ## Overview
@@ -12,7 +14,7 @@ This project began as a simple student dashboard but evolved into a modular acad
 
 Instead of placing business logic inside React components, the application is built around independent engines responsible for calculations, analytics, recommendations, and presentation models.
 
-The result is a scalable architecture that resembles how production SaaS applications are engineered.
+The architecture separates application state, domain calculations, presentation models, and UI components so each layer can evolve independently.
 
 ---
 
@@ -28,12 +30,16 @@ The result is a scalable architecture that resembles how production SaaS applica
 * Smart insights
 * Achievement tracking
 
+<!-- [image] -->
+
 ### Course Management
 
 * Create, edit, and delete courses
 * Track course progress
 * GPA forecasting
 * At-risk course detection
+
+
 
 ### Assignment Management
 
@@ -50,6 +56,18 @@ The result is a scalable architecture that resembles how production SaaS applica
 * Assignment completion metrics
 * Forecast GPA calculations
 * Academic performance trends
+
+### AI Academic Coach
+
+* AI-generated study plans based on current coursework
+* Assignment prioritization
+* Recommended study time
+* Academic workload and goal context
+* Server-side AI integration
+* Structured AI responses
+* Privacy-conscious academic context boundaries
+
+<!-- [image] -->
 
 ### Student Experience
 
@@ -73,7 +91,7 @@ The result is a scalable architecture that resembles how production SaaS applica
 ## UI
 
 * React Icons
-* CSS Modules / Modern CSS
+* Modern CSS
 * Responsive Layout
 
 ## Architecture
@@ -85,6 +103,33 @@ The result is a scalable architecture that resembles how production SaaS applica
 * Feature-first Organization
 
 ---
+
+# AI Architecture
+
+The AI Academic Coach is implemented as a separate service layer rather than placing AI provider logic inside React components.
+
+React
+  ↓
+useAcademicCoach
+  ↓
+HttpAcademicAIService
+  ↓
+Express API
+  ↓
+OpenAI
+
+The frontend sends a deliberately scoped academic context containing:
+
+- Courses
+- Assignments
+- Academic goals
+- Academic workload
+- Goal status
+- Academic momentum
+
+Authentication credentials and passwords are not included in the AI context.
+
+AI-generated dates are normalized against the application's source assignment data on the server rather than relying on the model to format dates.
 
 # Project Structure
 
@@ -102,31 +147,60 @@ utils/
 
 ---
 
+# Design Decisions
+
+### Why an Engine-Driven Architecture?
+
+Business logic was intentionally separated from React presentation components.
+
+Rather than calculating academic metrics directly inside UI components, the application uses dedicated engines and presentation builders.
+
+This allows:
+
+- Business logic to remain testable
+- Components to remain focused on presentation
+- Analytics to be reused across features
+- UI changes to occur without rewriting core calculations
+- The application to scale without turning components into large logic containers
+
 # Engine Architecture
 
 The application separates business logic from presentation.
 
 ```text
-AppContext
-        │
-        ▼
-AcademicEngine
-        │
-        ▼
-DashboardEngine
-        │
-        ▼
-AnalyticsEngine
-        │
-        ▼
-React Components
+                    Student Portal
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+         AppContext            Feature Hooks
+              │                     │
+              └──────────┬──────────┘
+                         │
+                  Academic Engine
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+   Dashboard         Analytics        Academic Data
+     Models            Models           Models
+        │                │                │
+        └────────────────┼────────────────┘
+                         │
+                  React Components
+                         │
+                  AI Academic Coach
+                         │
+                HttpAcademicAIService
+                         │
+                    Express API
+                         │
+                      OpenAI
 ```
 
 Every engine owns a single responsibility.
 
-Components render data.
+Engines and builders prepare domain and presentation data.
 
-Engines create data.
+React components consume those models and render the interface.
 
 ---
 
@@ -164,23 +238,7 @@ Produces datasets for:
 * Course Progress
 * Assignment Completion
 
----
 
-# Future Roadmap
-
-Planned engines include:
-
-* GoalEngine
-* RecommendationEngine
-* NotificationEngine
-* CalendarEngine
-* SearchEngine
-* AIEngine
-* DataEngine
-
-These additions will continue expanding the platform while preserving the same architecture.
-
----
 
 # Engineering Goals
 
@@ -194,6 +252,50 @@ Key design goals include:
 * Reusable Business Logic
 * Strong Type Safety
 * Clean UI Architecture
+
+
+# Screenshots
+
+*(Add screenshots as the UI evolves.)*
+
+---
+
+# Roadmap
+
+### Completed
+
+- Responsive academic dashboard
+- Course management
+- Assignment management
+- Academic analytics
+- Notifications
+- Theme system
+- Ninja Mode
+- User-scoped persistence
+- Authentication scaffolding
+- AI Academic Coach
+
+### Planned
+
+- Calendar / schedule enhancements
+- Expanded AI coaching interactions
+- Production-grade authentication and session management
+- Backend persistence
+- Additional accessibility and usability refinement
+
+---
+
+# Lessons Learned
+
+This project reinforced several architectural lessons:
+
+- Keep business logic outside presentation components.
+- Treat application state as a shared source of truth.
+- Scope persisted data to the authenticated user.
+- Keep AI provider logic on the server.
+- Do not rely on AI to return authoritative application data.
+- Use the application's data as the source of truth for dates and identifiers.
+- Avoid unnecessary re-computation when unrelated application state changes.
 
 ---
 
@@ -225,26 +327,16 @@ npm run build
 
 ---
 
-# Screenshots
-
-*(Add screenshots as the UI evolves.)*
-
----
-
-# Learning Goals
-
-This project is an ongoing exploration of modern frontend engineering, UI/UX design, software architecture, and scalable React application development.
-
-Every major feature is intentionally designed to improve both user experience and engineering quality.
-
----
-
 # License
 
 This project is for educational and portfolio purposes.
 
 
-I'd eventually add three more sections:
-Design Decisions – Explain why you chose an engine architecture instead of putting everything in components.
-Case Study – Link to the polished UI/UX case study page you've been planning for hiring managers.
-Lessons Learned – Briefly describe architectural challenges you solved during development.
+I'd eventually add more sections:
+
+## Case Study
+
+A detailed UX and engineering case study covering the product's design process, information architecture, responsive interface system, accessibility decisions, technical architecture, and AI integration.
+
+<!-- [View the Student Portal Case Study](YOUR_CASE_STUDY_URL) -->
+
