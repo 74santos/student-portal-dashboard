@@ -5,7 +5,7 @@ A portfolio-grade academic productivity SaaS built with React and TypeScript, co
 The Student Portal helps students manage coursework, assignments, academic performance, study habits, and long-term goals through intelligent analytics and a clean, responsive user experience.
 
 
-[GitHub Repository](https://github.com/74santos/student-portal-dashboard) · [Live Demo](#)
+[GitHub Repository](https://github.com/74santos/student-portal-dashboard) · [Live Demo](https://studentportaldashboard-f51e--5173--d5306e6f.local-credentialless.webcontainer.io/login)
 ---
 
 ## Overview
