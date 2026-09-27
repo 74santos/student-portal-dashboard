@@ -30,7 +30,7 @@ The architecture separates application state, domain calculations, presentation 
 * Smart insights
 * Achievement tracking
 
-![Dashboard](./src/assets/Admin_dashboard.png)
+![Dashboard](./src/assets/Admin_dashboard.jpg) 
 
 ### Course Management
 
@@ -39,7 +39,7 @@ The architecture separates application state, domain calculations, presentation 
 * GPA forecasting
 * At-risk course detection
 
-![Course](./src/assets/Course_management.png)
+![Course](./src/assets/Course_management.jpg)
 
 ### Assignment Management
 
@@ -67,7 +67,7 @@ The architecture separates application state, domain calculations, presentation 
 * Structured AI responses
 * Privacy-conscious academic context boundaries
 
-![AI Coach](./src/assets/AI_Coach_section.png)
+![AI Coach](./src/assets/AI_Coach_section.jpg)
 
 ### Student Experience
 
