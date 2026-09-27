@@ -1,121 +1,180 @@
-Student Portal Architecture
+# Student Portal SaaS --- Architecture
 
-1. Vision
-2. Architecture Philosophy
-3. Folder Structure
-4. Layer Responsibilities
-5. Feature Standard
-6. Engine Standard
-7. Presentation Layer
-8. State Management
-9. Data Flow
-10. Naming Conventions
-11. Rules of Three
-12. Design Principles
-13. Future Expansion
+## Purpose
 
-# Student Portal Platform
+Student Portal is a portfolio-grade academic productivity SaaS built
+with React and TypeScript.
 
-The Student Portal Platform is a modular academic productivity system.
+The architecture separates application state, academic/domain
+calculations, presentation models, feature hooks, UI components, and the
+server-side AI integration.
 
-The architecture is designed around separation of concerns.
+The goal is to keep React components focused on presentation while
+business rules remain reusable and testable.
 
-Business logic never lives inside UI.
+## High-Level Architecture
 
-Presentation never performs calculations.
+``` text
+                    Student Portal
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+         AppContext            Feature Hooks
+              │                     │
+              └──────────┬──────────┘
+                         │
+                  Academic Engine
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+   Dashboard         Analytics        Academic Data
+     Models            Models           Models
+        │                │                │
+        └────────────────┼────────────────┘
+                         │
+                  React Components
+                         │
+                  AI Academic Coach
+                         │
+                HttpAcademicAIService
+                         │
+                    Express API
+                         │
+                      OpenAI
+```
 
-Features compose sections.
+## Architectural Layers
 
-Sections compose components.
+### Application State
 
-Every layer has exactly one responsibility.
+`AppContext` provides shared application state and actions to feature
+areas.
 
-## Architecture Philosophy
+Examples include:
 
-The project follows one guiding principle:
+-   authenticated user
+-   student profile
+-   courses
+-   assignments
+-   activities
+-   notifications
+-   theme
+-   privacy/Ninja Mode
+-   academic snapshot
 
-Move complexity downward.
+The context acts as an application-level source of truth rather than
+allowing individual components to maintain duplicated versions of
+academic data.
 
-Pages should become smaller over time.
+### Domain and Academic Logic
 
-Business logic belongs inside Engines.
+Academic calculations are kept outside presentation components.
 
-Presentation belongs inside Presentation Models.
+The academic engine builds an `AcademicSnapshot` containing:
 
-Pages should only compose Features.
+-   metrics
+-   analysis
+-   recommendations
+-   decisions
+-   insights
+-   achievements
+-   summary information
 
-## Folder Structure
+This allows the same academic information to support multiple UI
+features.
 
-src/
+### Presentation Models
 
-core/
+Dashboard and analytics builders transform domain data into models that
+are convenient for React components to render.
 
-engines/
+This keeps formatting and UI-oriented decisions out of core academic
+calculations.
 
-pages/
+### React Components
 
-components/
+Components are responsible primarily for:
 
-context/
+-   rendering
+-   user interaction
+-   accessibility
+-   visual states
+-   composing feature-level UI
 
-types/
+Components should consume prepared models instead of becoming large
+containers for business logic.
 
-## Diagram
+### AI Service Layer
 
-Student Data
+The AI Academic Coach follows a provider-independent service boundary:
 
-Courses
+``` text
+React
+  ↓
+useAcademicCoach
+  ↓
+HttpAcademicAIService
+  ↓
+POST /api/ai/study-plan
+  ↓
+Express
+  ↓
+OpenAI
+```
 
-Assignments
+The API key remains server-side.
 
-Activities
+The browser sends a deliberately scoped academic context rather than the
+entire application state.
 
-        │
+## AI Data Boundary
 
-        ▼
+The AI context contains:
 
-AcademicEngine
+-   courses
+-   assignments
+-   target GPA
+-   study goal hours
+-   workload
+-   goal status
+-   academic momentum
 
-        │
+It does not include:
 
-        ▼
+-   passwords
+-   authentication credentials
+-   API keys
+-   unrelated application state
 
-──────────────────────────────
+Application data remains authoritative. For example, assignment IDs and
+dates are resolved against the application's assignment data on the
+server rather than trusting the model to invent or format authoritative
+values.
 
-Metrics
+## Persistence
 
-↓
+User-specific academic information is persisted using user-scoped
+storage keys.
 
-Core Analysis
+Conceptually:
 
-↓
+``` text
+student:<userId>
+courses:<userId>
+assignments:<userId>
+activities:<userId>
+notifications:<userId>
+```
 
-Academic Analysis
+This prevents one user's academic state from being accidentally reused
+for another user.
 
-↓
+## Design Principle
 
-Knowledge Generation
+The primary architectural rule is:
 
-↓
+> Engines and builders prepare domain and presentation data. React
+> components consume those models and render the interface.
 
-Executive Report
-
-↓
-
-Snapshot
-
-──────────────────────────────
-
-        │
-
-        ▼
-
-Dashboard
-
-Assignments
-
-Analytics
-
-Progress
-
-Goals
+This separation allows the application to evolve without turning UI
+components into large, tightly coupled logic containers.
