@@ -1,5 +1,5 @@
 import type { Course, Assignment  } from "../../types";
-import type { AcademicSnapshot } from "../../engines/features/AcademicEngine/types";
+
 
 
 export type AcademicAIContext = {

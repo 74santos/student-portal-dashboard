@@ -5,27 +5,19 @@ import type {
 } from "../types";
 
 export function getScheduleStats(
-  courses: Course[],
+  _courses: Course[],
   assignments: Assignment[],
-  activities: Activity[]
+  _activities: Activity[]
 ) {
   const upcomingAssignments = assignments.filter(
-    assignment =>
+    (assignment) =>
       !assignment.completed &&
       new Date(assignment.dueDate) >= new Date()
   ).length;
 
-  const studyHours = activities.reduce(
-    (total, activity) => {
-      // Only use this if Activity eventually stores duration/hours.
-      return total;
-    },
-    0
-  );
-
   return {
-    todaysClasses: 0, // derive from actual schedule/class data
+    todaysClasses: 0,
     upcomingAssignments,
-    studyHours,
+    studyHours: 0,
   };
 }

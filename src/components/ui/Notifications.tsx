@@ -15,7 +15,7 @@ export default function Notifications() {
   const ctx = useContext(AppContext);
   if (!ctx) return null;
 
-  const { activities, assignments, courses, clearActivities } = ctx;
+  const { activities, assignments, courses, student,clearActivities } = ctx;
 
   const [open, setOpen] = useState(false);
 
@@ -23,7 +23,7 @@ export default function Notifications() {
 
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const smartNotifications = generateNotifications(assignments, courses);
+  const smartNotifications = generateNotifications(assignments, courses, student);
 
   const activityNotifications =
     activities.map((activity) => ({
@@ -94,10 +94,7 @@ export default function Notifications() {
     );
   };
 
-  const markAllAsRead = () => {
-    setReadNotifications(notifications.map((n) => n.id));
-    setOpen(false); // optional: close after marking all read
-  };
+
 
   const iconMap = {
     critical: <FiAlertTriangle />,

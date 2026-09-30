@@ -10,11 +10,18 @@ import type {
   StudyRecommendation,
 } from "./AcademicAIService";
 
+import { formatCoachDueDate } from "../../utils/date";
+
 export class MockAcademicAIService implements AcademicAIService {
   async generateStudyPlan(
     context: AcademicAIContext
   ): Promise<StudyPlan> {
-    const { courses, assignments, snapshot } = context;
+    const {
+      courses,
+      assignments,
+      student,
+      academic,
+    } = context;
 
     const activeAssignments = assignments
       .filter((assignment) => !assignment.completed)
@@ -58,7 +65,7 @@ export class MockAcademicAIService implements AcademicAIService {
           assignmentId: assignment.id,
           title: assignment.title,
           courseName: course?.name ?? "Course",
-          dueDate: this.formatDueDate(
+          dueDate: formatCoachDueDate(
             assignment.dueDate,
             assignment.dueTime
           ),
@@ -67,7 +74,7 @@ export class MockAcademicAIService implements AcademicAIService {
           reason: this.getReason(
             assignment,
             course,
-            snapshot
+            academic
           ),
         };
       });
@@ -80,12 +87,14 @@ export class MockAcademicAIService implements AcademicAIService {
       );
 
     return {
-      greeting: `${this.getGreeting()}, ${snapshot.student.name.split(" ")[0]}.`,
+      greeting: `${this.getGreeting()}, ${
+        student.name.split(" ")[0]
+      }.`,
       recommendations,
       totalRecommendedHours,
       summary: this.getSummary(
         recommendations,
-        snapshot
+        academic
       ),
     };
   }
@@ -93,7 +102,7 @@ export class MockAcademicAIService implements AcademicAIService {
   private getReason(
     assignment: Assignment,
     course: Course | undefined,
-    snapshot: AcademicAIContext["snapshot"]
+    academic: AcademicAIContext["academic"]
   ): string {
     if (assignment.priority === "high") {
       return `High-priority work for ${
@@ -101,7 +110,7 @@ export class MockAcademicAIService implements AcademicAIService {
       } should be handled first.`;
     }
 
-    if (snapshot.analysis.goalStatus === "Behind") {
+    if (academic.goalStatus === "Behind") {
       return "This assignment can help you get back on track with your academic goals.";
     }
 
@@ -114,52 +123,30 @@ export class MockAcademicAIService implements AcademicAIService {
 
   private getSummary(
     recommendations: StudyRecommendation[],
-    snapshot: AcademicAIContext["snapshot"]
+    academic: AcademicAIContext["academic"]
   ): string {
     if (recommendations.length === 0) {
       return "You're caught up. I recommend using your available study time to review upcoming course material.";
     }
-  
-    if (snapshot.analysis.workload === "Heavy") {
+
+    if (academic.workload === "Heavy") {
       return "I found the assignments that deserve the most attention based on priority, deadlines, and your current course workload.";
     }
-  
+
     return "I prioritized your next study tasks using assignment priority, deadlines, and your current academic progress.";
   }
 
   private getGreeting(): string {
     const hour = new Date().getHours();
-  
+
     if (hour < 12) {
       return "Good morning";
     }
-  
+
     if (hour < 18) {
       return "Good afternoon";
     }
-  
+
     return "Good evening";
-  }
-  
-  private formatDueDate(
-    dueDate: string,
-    dueTime?: string
-  ): string {
-    const date = new Date(dueDate);
-  
-    if (Number.isNaN(date.getTime())) {
-      return dueDate;
-    }
-  
-    const formattedDate = new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-    }).format(date);
-  
-    if (!dueTime) {
-      return formattedDate;
-    }
-  
-    return `${formattedDate} · ${dueTime}`;
   }
 }
