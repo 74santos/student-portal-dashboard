@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { formatCoachDueDate } from "../../src/utils/date";
+import { formatCoachDueDate } from "../src/utils/date.js";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
